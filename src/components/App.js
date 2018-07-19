@@ -13,6 +13,24 @@ class App extends React.Component {
         type: 'all'
       }
     }
+    this.onChangeType = this.onChangeType.bind(this);
+    this.onFindPetsClick = this.onFindPetsClick.bind(this);
+  }
+
+  onFindPetsClick(event) {
+    let optionalSearchType = '';
+    if (this.state.filters.type !== 'all') {
+      optionalSearchType = "?type=" + this.state.filters.type;
+    }
+    fetch("/api/pets" + optionalSearchType).then( resp => resp.json()).then( json => this.setState({pets: json}))
+  }
+
+  onChangeType(event) {
+    this.setState({
+      filters: {
+        type: event.target.value
+      }
+    });
   }
 
   render() {
@@ -24,10 +42,10 @@ class App extends React.Component {
         <div className="ui container">
           <div className="ui grid">
             <div className="four wide column">
-              <Filters />
+              <Filters onChangeType={this.onChangeType} onFindPetsClick={this.onFindPetsClick}/>
             </div>
             <div className="twelve wide column">
-              <PetBrowser />
+              <PetBrowser pets={this.state.pets}/>
             </div>
           </div>
         </div>
