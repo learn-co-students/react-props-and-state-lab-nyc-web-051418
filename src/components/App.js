@@ -2,6 +2,7 @@ import React from 'react'
 
 import Filters from './Filters'
 import PetBrowser from './PetBrowser'
+import { getAll} from '../data/pets'
 
 class App extends React.Component {
   constructor() {
@@ -15,6 +16,7 @@ class App extends React.Component {
     }
     this.onChangeType = this.onChangeType.bind(this);
     this.onFindPetsClick = this.onFindPetsClick.bind(this);
+    this.onAdoptPet = this.onAdoptPet.bind(this); 
   }
 
   onFindPetsClick(event) {
@@ -33,6 +35,19 @@ class App extends React.Component {
     });
   }
 
+  onAdoptPet(petId) {
+    let currPet = this.state.pets.find(pet => pet.id === petId);
+    console.log("Current Pet: ", currPet)
+    let currPetIdx = this.state.pets.indexOf(currPet); 
+    let updatedPets = this.state.pets.slice(); 
+    console.log(updatedPets)
+    console.log("IDX:", currPetIdx)
+    updatedPets[currPetIdx].isAdopted = true;
+    this.setState({
+      pets: updatedPets
+    });
+  }
+
   render() {
     return (
       <div className="ui container">
@@ -45,7 +60,7 @@ class App extends React.Component {
               <Filters onChangeType={this.onChangeType} onFindPetsClick={this.onFindPetsClick}/>
             </div>
             <div className="twelve wide column">
-              <PetBrowser pets={this.state.pets}/>
+              <PetBrowser pets={this.state.pets} onAdoptPet={this.onAdoptPet}/>
             </div>
           </div>
         </div>
